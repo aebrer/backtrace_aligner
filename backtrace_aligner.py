@@ -313,7 +313,7 @@ for element in seq.parse(args.input, 'fasta'):
 pairwise = itertools.combinations(range(0,len(fasta_head)), 2)
 
 percent_id = NestedDict()
-best_global_scores = NestedDict()
+global_scores = NestedDict()
 best_local_scores = NestedDict()
 
 
@@ -348,7 +348,7 @@ for pair in pairwise:
                                                         y,
                                                         all_global_scores, 
                                                         global_align_dict)
-    best_global_score = max(all_global_scores)
+    global_score = global_align_dict[len(x)-1][len(y)-1]["score"]
 
 
     # write score matrix
@@ -449,7 +449,7 @@ for pair in pairwise:
     
     
     percent_id[aligned_head[0]][aligned_head[1]] = matches/float(len(aligned_seq[0])) * 100
-    best_global_scores[x_name][y_name] = best_global_score
+    global_scores[x_name][y_name] = global_score
     best_local_scores[x_name][y_name] = best_local_score
 
 
@@ -461,11 +461,11 @@ for x in percent_id:
 output.close()
 
 
-output = open("pairwise_best_global_scores.tsv", "w")
+output = open("pairwise_global_scores.tsv", "w")
 output.write("x\ty\tScore\n")
-for x in best_global_scores:
-    for y in best_global_scores[x]:
-        output.write(str(x) + "\t" + str(y) + "\t" + str(best_global_scores[x][y]) + "\n")
+for x in global_scores:
+    for y in global_scores[x]:
+        output.write(str(x) + "\t" + str(y) + "\t" + str(global_scores[x][y]) + "\n")
 output.close()
 
 output = open("pairwise_best_local_scores.tsv", "w")
